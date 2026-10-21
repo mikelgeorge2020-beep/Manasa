@@ -1,35 +1,277 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#1e5bd8"><link rel="apple-touch-icon" href="icon-192.png">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
-<title>منصة المجتهد</title>
-<style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1b2033;--mut:#667;--pri:#3b5bdb;--bd:#dfe3ee;--ok:#2b8a3e;--bad:#c92a2a}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#12141c;--card:#1b1f2c;--tx:#e8eaf2;--mut:#9aa1b8;--pri:#7c93ff;--bd:#2d3347;--ok:#69db7c;--bad:#ff8787}}
-:root[data-theme="dark"]{color-scheme:dark;--bg:#12141c;--card:#1b1f2c;--tx:#e8eaf2;--mut:#9aa1b8;--pri:#7c93ff;--bd:#2d3347;--ok:#69db7c;--bad:#ff8787}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.6}
-.w{max-width:960px;margin:0 auto;padding:14px}
-h1{font-size:1.4rem;margin:8px 0 16px;text-align:center}h2{font-size:1.1rem;margin:14px 0 8px}
-.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.ic{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:22px 12px;text-align:center;cursor:pointer;font:inherit;color:inherit}
-.ic .e{font-size:2.4rem;display:block}.ic b{display:block;margin-top:6px}.ic small{color:var(--mut)}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px;margin-bottom:12px}
-.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:4px}
-.tabs button{white-space:nowrap}
-button,.b{font:inherit;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;padding:7px 12px;cursor:pointer}
-button.on,button.p{background:var(--pri);color:#fff;border-color:var(--pri)}
-input,select{font:inherit;border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:10px;padding:8px;width:100%;min-width:0}
-.fr{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:8px;align-items:end}
-label{font-size:.85rem;color:var(--mut);display:block}
-.sc{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.9rem}
-th,td{border-bottom:1px solid var(--bd);padding:7px 6px;text-align:right;white-space:nowrap}th{color:var(--mut);font-weight:600}
-.bd{background:var(--pri);color:#fff;border-radius:99px;padding:0 8px;font-size:.8rem}
-.ok{color:var(--ok)}.bad{color:var(--bad)}.mut{color:var(--mut)}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-a{color:var(--pri)}
-body{font-family:"Cairo","Segoe UI",Tahoma,Arial,sans-serif}:root{--pri:#1e5bd8;--acc:#f5a524}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المنصة التعليمية الشاملة في مصر (27 محافظة)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-indigo-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <i class="fa-solid fa-graduation-cap text-3xl text-yellow-400"></i>
+                <h1 class="text-xl font-bold">منصة تعليم مصر (27 محافظة)</h1>
+            </div>
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <button onclick="changeView('admin')" id="btn-admin" class="bg-yellow-500 hover:bg-yellow-600 text-indigo-950 px-3 py-1.5 rounded-lg text-sm font-bold transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-user-shield"></i> لوحة الأدمن والإدارة
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+
+        <!-- Public Announcement Banner Area -->
+        <div id="announcementBanner" class="bg-gradient-to-r from-amber-500 to-yellow-600 text-white p-4 rounded-xl shadow-md flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-bullhorn text-2xl"></i>
+                <div>
+                    <h3 class="font-bold text-base">إعلان المنصة الرسمي</h3>
+                    <p class="text-xs text-amber-100" id="currentAdText">مرحباً بكم في المنصة التعليمية الرقمية لجميع المحافظات والمراحل الدراسية.</p>
+                </div>
+            </div>
+            <span class="bg-black bg-opacity-20 text-xs px-2.5 py-1 rounded-full uppercase font-bold">نشط</span>
+        </div>
+
+        <!-- 3 Main Tabs Switcher -->
+        <div class="grid grid-cols-3 gap-2 bg-white p-2 rounded-xl shadow-sm border">
+            <button onclick="changeView('student')" id="btn-student" class="py-3 px-4 text-center font-bold text-sm bg-indigo-50 text-indigo-700 rounded-lg transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-user-graduate"></i> بوابة الطلاب
+            </button>
+            <button onclick="changeView('teacher')" id="btn-teacher" class="py-3 px-4 text-center font-bold text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-chalkboard-user"></i> بوابة المعلمين
+            </button>
+            <button onclick="changeView('parent')" id="btn-parent" class="py-3 px-4 text-center font-bold text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-user-group"></i> بوابة أولياء الأمور
+            </button>
+        </div>
+
+        <!-- VIEW 1: Student Portal -->
+        <div id="view-student" class="view-section space-y-6">
+            <section class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-map-location-dot text-indigo-600"></i> فلترة المحافظات والمراحل الدراسية للطلاب
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 mb-1">اختر المحافظة (27 محافظة)</label>
+                        <select class="w-full border rounded-lg p-2.5 text-sm bg-gray-50">
+                            <option value="">جميع المحافظات المصرية</option>
+                            <option>القاهرة</option><option>الإسكندرية</option><option>الجيزة</option><option>الدقهلية</option><option>الشرقية</option><option>المنوفية</option><option>الغربية</option><option>القليوبية</option><option>البحيرة</option><option>كفر الشيخ</option><option>دمياط</option><option>بورسعيد</option><option>الإسماعيلية</option><option>السويس</option><option>شمال سيناء</option><option>جنوب سيناء</option><option>الفيوم</option><option>بني سويف</option><option>المنيا</option><option>أسيوط</option><option>سوهاج</option><option>قنا</option><option>الأقصر</option><option>أسوان</option><option>البحر الأحمر</option><option>الوادي الجديد</option><option>مطروح</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 mb-1">اختر المرحلة التعليمية</label>
+                        <select class="w-full border rounded-lg p-2.5 text-sm bg-gray-50">
+                            <option value="">جميع المراحل (تأسيسي، ابتدائي، إعدادي، ثانوي، أزهري، جامعي)</option>
+                            <option>رياض الأطفال / تأسيسي</option>
+                            <option>المرحلة الابتدائية</option>
+                            <option>المرحلة الإعدادية</option>
+                            <option>المرحلة الثانوية العامة</option>
+                            <option>المرحلة الأزهرية</option>
+                            <option>المرحلة الجامعية</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- VIEW 2: Teacher Portal (Full Registration Form with 27 Govs & Sub-Specialties & Student Code) -->
+        <div id="view-teacher" class="view-section space-y-6 hidden">
+            <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-indigo-600 space-y-6">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <i class="fa-solid fa-chalkboard-user text-indigo-600"></i> تسجيل بيانات المعلم وإدارة الطلاب
+                    </h3>
+                    <p class="text-xs text-gray-500 mt-1">سجل بياناتك الشخصية، تخصصك والأقسام الفرعية، المحافظة، وربط كود الطالب.</p>
+                </div>
+
+                <form onsubmit="alert('تم تسجيل المعلم بنجاح!'); return false;" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl border">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">الاسم الكامل</label>
+                        <input type="text" required placeholder="أدخل اسمك ثلاثي" class="w-full border rounded-lg p-2.5 text-sm bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">رقم الهاتف المحمول</label>
+                        <input type="tel" required placeholder="01xxxxxxxx" class="w-full border rounded-lg p-2.5 text-sm bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">رقم الواتساب</label>
+                        <input type="tel" required placeholder="01xxxxxxxx" class="w-full border rounded-lg p-2.5 text-sm bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">المحافظة (27 محافظة)</label>
+                        <select required class="w-full border rounded-lg p-2.5 text-sm bg-white">
+                            <option value="">اختر المحافظة</option>
+                            <option>القاهرة</option><option>الإسكندرية</option><option>الجيزة</option><option>الدقهلية</option><option>الشرقية</option><option>المنوفية</option><option>الغربية</option><option>القليوبية</option><option>البحيرة</option><option>كفر الشيخ</option><option>دمياط</option><option>بورسعيد</option><option>الإسماعيلية</option><option>السويس</option><option>شمال سيناء</option><option>جنوب سيناء</option><option>الفيوم</option><option>بني سويف</option><option>المنيا</option><option>أسيوط</option><option>سوهاج</option><option>قنا</option><option>الأقصر</option><option>أسوان</option><option>البحر الأحمر</option><option>الوادي الجديد</option><option>مطروح</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">التخصص والأقسام الفرعية</label>
+                        <select required class="w-full border rounded-lg p-2.5 text-sm bg-white">
+                            <option value="">اختر التخصص والأقسام الفرعية</option>
+                            <option>اللغة العربية (قواعد، أدب وبلاغة)</option>
+                            <option>اللغة الإنجليزية (Grammar, Literature)</option>
+                            <option>اللغة الفرنسية / لغات أجنبية</option>
+                            <option>الرياضيات (جبر وحساب، هندسة، تفاضل وتكامل)</option>
+                            <option>العلوم (فيزياء، كيمياء، أحياء وجيولوجيا)</option>
+                            <option>الدراسات الاجتماعية (تاريخ، جغرافيا)</option>
+                            <option>المواد الشرعية والعربية (أزهر)</option>
+                            <option>الحاسب الآلي وتكنولوجيا المعلومات</option>
+                            <option>مواد المرحلة الابتدائية (معلم فصل عام)</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2 border-t pt-4 mt-2">
+                        <label class="block text-xs font-bold text-indigo-700 mb-1"><i class="fa-solid fa-id-card"></i> كود الطالب المتابع معك</label>
+                        <input type="text" placeholder="أدخل كود الطالب (مثال: STU-2026-XXXX)" class="w-full border rounded-lg p-2.5 text-sm bg-white">
+                    </div>
+                    <div class="md:col-span-2">
+                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow">
+                            حفظ وتسجيل بيانات المعلم والطالب
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- VIEW 3: Parent Portal -->
+        <div id="view-parent" class="view-section space-y-6 hidden">
+            <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-purple-600 space-y-6">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <i class="fa-solid fa-user-group text-purple-600"></i> نموذج متابعة وتسجيل ولي الأمر
+                    </h3>
+                    <p class="text-xs text-gray-500 mt-1">سجل بيانات ولي الأمر واربطها بكود الطالب لمتابعة الحضور والدرجات لحظياً.</p>
+                </div>
+
+                <form onsubmit="alert('تم ربط ولي الأمر بنجاح!'); return false;" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-purple-50 p-4 rounded-xl border border-purple-200">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">اسم ولي الأمر</label>
+                        <input type="text" required placeholder="الاسم الرباعي" class="w-full border rounded-lg p-2.5 text-sm bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">رقم الهاتف / الواتساب</label>
+                        <input type="tel" required placeholder="01xxxxxxxx" class="w-full border rounded-lg p-2.5 text-sm bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">المحافظة</label>
+                        <select required class="w-full border rounded-lg p-2.5 text-sm bg-white">
+                            <option value="">اختر المحافظة</option>
+                            <option>القاهرة</option><option>الإسكندرية</option><option>الجيزة</option><option>الدقهلية</option><option>الشرقية</option><option>المنوفية</option><option>الغربية</option><option>القليوبية</option><option>البحيرة</option><option>كفر الشيخ</option><option>دمياط</option><option>بورسعيد</option><option>الإسماعيلية</option><option>السويس</option><option>شمال سيناء</option><option>جنوب سيناء</option><option>الفيوم</option><option>بني سويف</option><option>المنيا</option><option>أسيوط</option><option>سوهاج</option><option>قنا</option><option>الأقصر</option><option>أسوان</option><option>البحر الأحمر</option><option>الوادي الجديد</option><option>مطروح</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">كود الطالب المرتبط</label>
+                        <input type="text" required placeholder="أدخل كود الطالب المتابع" class="w-full border rounded-lg p-2.5 text-sm bg-white">
+                    </div>
+                    <div class="md:col-span-2">
+                        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow">
+                            تأكيد ربط حساب ولي الأمر ومتابعة الطالب
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- VIEW 4: Admin Dashboard (School Approval & Ad Management) -->
+        <div id="view-admin" class="view-section space-y-6 hidden">
+            <!-- Stats Grid -->
+            <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl shadow-sm border-r-4 border-blue-500">
+                    <p class="text-gray-500 text-xs font-semibold">إجمالي الطلاب</p>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-1">1,240</h3>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-r-4 border-green-500">
+                    <p class="text-gray-500 text-xs font-semibold">إجمالي المعلمين</p>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-1">85</h3>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-r-4 border-purple-500">
+                    <p class="text-gray-500 text-xs font-semibold">أولياء الأمور</p>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-1">410</h3>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-r-4 border-yellow-500">
+                    <p class="text-gray-500 text-xs font-semibold">المحافظات النشطة</p>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-1">27 / 27</h3>
+                </div>
+            </section>
+
+            <!-- School Requests & Ad Management Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- 1. School Approval/Rejection System -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-indigo-600">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                            <i class="fa-solid fa-school text-indigo-600"></i> طلبات انضمام المدارس
+                        </h3>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs px-2.5 py-1 rounded-full font-bold">طلبات جديدة معلقة</span>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg border">
+                            <div>
+                                <h4 class="font-bold text-sm text-gray-800">مدرسة النصر الرسمية لغات</h4>
+                                <p class="text-xs text-gray-500">محافظة الإسكندرية - المرحلة الإعدادية</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="alert('تم قبول طلب انضمام المدرسة وتفعيلها بنجاح.')" class="bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-1.5 rounded-md transition flex items-center gap-1">
+                                    <i class="fa-solid fa-check"></i> قبول
+                                </button>
+                                <button onclick="if(confirm('هل أنت متأكد من رفض طلب المدرسة؟')) alert('تم رفض الطلب.');" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1.5 rounded-md transition flex items-center gap-1">
+                                    <i class="fa-solid fa-xmark"></i> رفض
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Ad Management Unit & Button -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-amber-500">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                            <i class="fa-solid fa-rectangle-ad text-amber-500"></i> إدارة وإضافة الإعلانات
+                        </h3>
+                        <button onclick="let ad = prompt('أدخل نص الإعلان الجديد أو اسم السنتر التعليمي:'); if(ad) { document.getElementById('currentAdText').innerText = ad; alert('تم نشر الإعلان بنجاح!'); }" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 font-bold shadow-sm">
+                            <i class="fa-solid fa-plus-circle"></i> إضافة إعلان جديد
+                        </button>
+                    </div>
+                    
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-lg text-center">
+                        <i class="fa-solid fa-bullhorn text-amber-600 text-2xl mb-2"></i>
+                        <p class="text-xs text-amber-800 font-semibold">تحكم في ظهور البانرات الإعلانية والسناتر التعليمية لحظياً لجميع المحافظات الـ 27.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- JavaScript Control Functions -->
+    <script>
+        function changeView(viewName) {
+            // إخفاء جميع الأقسام
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            
+            // إعادة تعيين أزرار التبويبات الرئيسية
+            document.getElementById('btn-student').className = "py-3 px-4 text-center font-bold text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition flex items-center justify-center gap-2";
+            document.getElementById('btn-teacher').className = "py-3 px-4 text-center font-bold text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition flex items-center justify-center gap-2";
+            document.getElementById('btn-parent').className = "py-3 px-4 text-center font-bold text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition flex items-center justify-center gap-2";
+            document.getElementById('btn-admin').className = "bg-yellow-500 hover:bg-yellow-600 text-indigo-950 px-3 py-1.5 rounded-lg text-sm font-bold transition flex items-center gap-1.5 shadow-sm";
+
+            // إظهار القسم المطلوب وتنشيط زره
+            document.getElementById('view-' + viewName).classList.remove('hidden');
+            
+            if (viewName === 'admin') {
+                document.getElementById('btn-admin').className = "bg-yellow-600 text-white px-3 py-1.5 rounded-lg text-sm font-bold transition flex items-center gap-
