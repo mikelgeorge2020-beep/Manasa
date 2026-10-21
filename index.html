@@ -1,104 +1,35 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة تعليم مصر</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Cairo', sans-serif; }</style>
-</head>
-<body class="bg-gray-100 p-4">
-
-    <div class="max-w-4xl mx-auto space-y-6">
-        <!-- هيدر المنصة -->
-        <div class="bg-indigo-900 text-white p-4 rounded-xl shadow flex justify-between items-center">
-            <h1 class="text-lg font-bold">منصة تعليم مصر (27 محافظة)</h1>
-            <button onclick="changeView('admin')" class="bg-yellow-500 text-black px-3 py-1.5 rounded font-bold text-sm">لوحة الأدمن</button>
-        </div>
-
-        <!-- أزرار التبويبات -->
-        <div class="grid grid-cols-3 gap-2 bg-white p-2 rounded-xl shadow">
-            <button onclick="changeView('student')" id="btn-student" class="p-3 text-center font-bold bg-indigo-50 text-indigo-700 rounded-lg">الطلاب</button>
-            <button onclick="changeView('teacher')" id="btn-teacher" class="p-3 text-center font-bold text-gray-600 rounded-lg">المعلمين</button>
-            <button onclick="changeView('parent')" id="btn-parent" class="p-3 text-center font-bold text-gray-600 rounded-lg">أولياء الأمور</button>
-        </div>
-
-        <!-- محتوى الطلاب -->
-        <div id="view-student" class="view-section bg-white p-6 rounded-xl shadow space-y-4">
-            <h2 class="font-bold text-lg text-indigo-900">بوابة الطلاب - فلترة المحافظات</h2>
-            <select class="w-full border p-2 rounded">
-                <option>اختر المحافظة (27 محافظة)</option>
-                <option>القاهرة</option><option>الإسكندرية</option><option>الجيزة</option><option>الدقهلية</option><option>الشرقية</option>
-            </select>
-        </div>
-
-        <!-- محتوى المعلمين -->
-        <div id="view-teacher" class="view-section bg-white p-6 rounded-xl shadow space-y-4 hidden">
-            <h2 class="font-bold text-lg text-indigo-900">تسجيل بيانات المعلم</h2>
-            <form onsubmit="alert('تم تسجيل المعلم بنجاح!'); return false;" class="space-y-3">
-                <input type="text" placeholder="الاسم الكامل" required class="w-full border p-2 rounded">
-                <input type="tel" placeholder="رقم الهاتف" required class="w-full border p-2 rounded">
-                <input type="tel" placeholder="رقم الواتساب" required class="w-full border p-2 rounded">
-                <select required class="w-full border p-2 rounded">
-                    <option value="">اختر المحافظة</option>
-                    <option>القاهرة</option><option>الإسكندرية</option><option>الجيزة</option>
-                </select>
-                <select required class="w-full border p-2 rounded">
-                    <option value="">اختر التخصص</option>
-                    <option>لغة عربية</option><option>رياضيات</option><option>علوم</option>
-                </select>
-                <input type="text" placeholder="كود الطالب المتابع" class="w-full border p-2 rounded">
-                <button type="submit" class="w-full bg-indigo-600 text-white p-2 rounded font-bold">حفظ بيانات المعلم</button>
-            </form>
-        </div>
-
-        <!-- محتوى أولياء الأمور -->
-        <div id="view-parent" class="view-section bg-white p-6 rounded-xl shadow space-y-4 hidden">
-            <h2 class="font-bold text-lg text-indigo-900">متابعة ولي الأمر</h2>
-            <form onsubmit="alert('تم ربط ولي الأمر بنجاح!'); return false;" class="space-y-3">
-                <input type="text" placeholder="اسم ولي الأمر" required class="w-full border p-2 rounded">
-                <input type="tel" placeholder="رقم الهاتف / الواتس" required class="w-full border p-2 rounded">
-                <input type="text" placeholder="كود الطالب المرتبط" required class="w-full border p-2 rounded">
-                <button type="submit" class="w-full bg-purple-600 text-white p-2 rounded font-bold">ربط حساب ولي الأمر</button>
-            </form>
-        </div>
-
-        <!-- لوحة الأدمن -->
-        <div id="view-admin" class="view-section bg-white p-6 rounded-xl shadow space-y-4 hidden">
-            <h2 class="font-bold text-lg text-indigo-900">لوحة تحكم الإدارة والأدمن</h2>
-            <div class="border p-4 rounded bg-gray-50 flex justify-between items-center">
-                <div>
-                    <h4 class="font-bold text-sm">مدرسة النصر الرسمية لغات</h4>
-                    <p class="text-xs text-gray-500">الإسكندرية</p>
-                </div>
-                <div class="space-x-2 space-x-reverse">
-                    <button onclick="alert('تم قبول المدرسة')" class="bg-green-600 text-white px-3 py-1 rounded text-xs">قبول</button>
-                    <button onclick="alert('تم رفض المدرسة')" class="bg-red-600 text-white px-3 py-1 rounded text-xs">رفض</button>
-                </div>
-            </div>
-            <button onclick="let ad = prompt('أدخل نص الإعلان:'); if(ad) alert('تم نشر الإعلان: ' + ad);" class="bg-amber-500 text-white w-full p-2 rounded font-bold text-sm">إضافة إعلان جديد</button>
-        </div>
-    </div>
-
-    <script>
-        function changeView(viewName) {
-            // إخفاء الكل
-            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
-            
-            // إعادة تعيين الأزرار
-            document.getElementById('btn-student').className = "p-3 text-center font-bold text-gray-600 rounded-lg";
-            document.getElementById('btn-teacher').className = "p-3 text-center font-bold text-gray-600 rounded-lg";
-            document.getElementById('btn-parent').className = "p-3 text-center font-bold text-gray-600 rounded-lg";
-
-            // إظهار القسم المطلوب وتنشيط الزر
-            document.getElementById('view-' + viewName).classList.remove('hidden');
-            if(viewName !== 'admin') {
-                document.getElementById('btn-' + viewName).className = "p-3 text-center font-bold bg-indigo-50 text-indigo-700 rounded-lg";
-            }
-        }
-    </script>
-</body>
-</html>
+<meta charset="utf-8">
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#1e5bd8"><link rel="apple-touch-icon" href="icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<title>منصة المجتهد</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1b2033;--mut:#667;--pri:#3b5bdb;--bd:#dfe3ee;--ok:#2b8a3e;--bad:#c92a2a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#12141c;--card:#1b1f2c;--tx:#e8eaf2;--mut:#9aa1b8;--pri:#7c93ff;--bd:#2d3347;--ok:#69db7c;--bad:#ff8787}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#12141c;--card:#1b1f2c;--tx:#e8eaf2;--mut:#9aa1b8;--pri:#7c93ff;--bd:#2d3347;--ok:#69db7c;--bad:#ff8787}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.6}
+.w{max-width:960px;margin:0 auto;padding:14px}
+h1{font-size:1.4rem;margin:8px 0 16px;text-align:center}h2{font-size:1.1rem;margin:14px 0 8px}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.ic{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:22px 12px;text-align:center;cursor:pointer;font:inherit;color:inherit}
+.ic .e{font-size:2.4rem;display:block}.ic b{display:block;margin-top:6px}.ic small{color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px;margin-bottom:12px}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:4px}
+.tabs button{white-space:nowrap}
+button,.b{font:inherit;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;padding:7px 12px;cursor:pointer}
+button.on,button.p{background:var(--pri);color:#fff;border-color:var(--pri)}
+input,select{font:inherit;border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:10px;padding:8px;width:100%;min-width:0}
+.fr{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:8px;align-items:end}
+label{font-size:.85rem;color:var(--mut);display:block}
+.sc{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border-bottom:1px solid var(--bd);padding:7px 6px;text-align:right;white-space:nowrap}th{color:var(--mut);font-weight:600}
+.bd{background:var(--pri);color:#fff;border-radius:99px;padding:0 8px;font-size:.8rem}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.mut{color:var(--mut)}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+a{color:var(--pri)}
+body{font-family:"Cairo","Segoe UI",Tahoma,Arial,sans-serif}:root{--pri:#1e5bd8;--acc:#f5a524}
