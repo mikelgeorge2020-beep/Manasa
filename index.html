@@ -3,555 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المنصة التعليمية السحابية الشاملة</title>
+    <title>المنصة التعليمية الشاملة في مصر</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', sans-serif; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-100 text-gray-800">
 
-    <div id="app" class="min-h-screen flex flex-col">
-        <!-- Header -->
-        <header class="bg-indigo-600 text-white shadow-md">
-            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-                <div class="flex items-center space-x-2 space-x-reverse cursor-pointer" onclick="showHome()">
-                    <i class="fa-solid fa-graduation-cap text-2xl"></i>
-                    <span class="text-xl font-bold">منصة الأجيال السحابية</span>
-                </div>
-                <div id="header-nav"></div>
+    <!-- Top Navigation Bar -->
+    <header class="bg-indigo-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <i class="fa-solid fa-graduation-cap text-3xl text-yellow-400"></i>
+                <h1 class="text-xl font-bold">منصة تعليم مصر (27 محافظة)</h1>
             </div>
-        </header>
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <span class="bg-indigo-800 px-3 py-1 rounded-full text-xs font-semibold">بوابة الإدارة الشاملة</span>
+                <button onclick="switchView('admin')" class="bg-yellow-500 hover:bg-yellow-600 text-indigo-950 px-3 py-1.5 rounded-lg text-sm font-bold transition">
+                    <i class="fa-solid fa-user-shield"></i> لوحة الأدمن
+                </button>
+            </div>
+        </div>
+    </header>
 
-        <!-- Content Area -->
-        <main class="flex-grow container mx-auto px-4 py-6">
-            <div id="main-content">
-                <div class="text-center py-20">
-                    <i class="fa-solid fa-spinner fa-spin text-4xl text-indigo-600 mb-4"></i>
-                    <p class="text-gray-600">جاري الاتصال بقاعدة البيانات السحابية...</p>
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+
+        <!-- Public Announcement Banner Area -->
+        <div id="announcementBanner" class="bg-gradient-to-r from-amber-500 to-yellow-600 text-white p-4 rounded-xl shadow-md flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-bullhorn text-2xl"></i>
+                <div>
+                    <h3 class="font-bold text-base">إعلان المنصة الرسمي</h3>
+                    <p class="text-xs text-amber-100" id="currentAdText">مرحباً بكم في المنصة التعليمية الرقمية لجميع المحافظات والمراحل الدراسية.</p>
                 </div>
             </div>
-        </main>
+            <span class="bg-black bg-opacity-20 text-xs px-2.5 py-1 rounded-full uppercase font-bold">نشط</span>
+        </div>
 
-        <!-- Footer -->
-        <footer class="bg-gray-800 text-white text-center py-4 mt-auto">
-            <p>جميع الحقوق محفوظة &copy; 2026 المنصة التعليمية السحابية</p>
-        </footer>
-    </div>
+        <!-- VIEW 1: Admin Dashboard (Default or Toggleable) -->
+        <div id="adminView" class="space-y-6">
+            
+            <!-- Stats Grid -->
+            <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl shadow-sm border-r-4 border-blue-500">
+                    <p class="text-gray-500 text-xs font-semibold">إجمالي الطلاب</p>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-1">1,240</h3>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-r-4 border-green-500">
+                    <p class="text-gray-500 text-xs font-semibold">إجمالي المعلمين</p>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-1">85</h3>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-r-4 border-purple-500">
+                    <p class="text-gray-500 text-xs font-semibold">أولياء الأمور</p>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-1">410</h3>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-r-4 border-yellow-500">
+                    <p class="text-gray-500 text-xs font-semibold">المحافظات النشطة</p>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-1">27 / 27</h3>
+                </div>
+            </section>
 
-    <!-- Firebase App & Firestore SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, where, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+            <!-- School Requests & Ad Management Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        // Firebase Configuration
-        const firebaseConfig = {
-          apiKey: "AIzaSyCPPAEK6tK0ZYNR8NsAZV5LFfjbJ3MKO34",
-          authDomain: "manasa-5235e.firebaseapp.com",
-          databaseURL: "https://manasa-5235e-default-rtdb.firebaseio.com",
-          projectId: "manasa-5235e",
-          storageBucket: "manasa-5235e.firebasestorage.app",
-          messagingSenderId: "226248527390",
-          appId: "1:226248527390:web:859f0d77ccc0dd14a1e80f",
-          measurementId: "G-S32DTY2XR4"
-        };
+                <!-- 1. School Approval/Rejection System -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-indigo-600">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                            <i class="fa-solid fa-school text-indigo-600"></i> طلبات انضمام المدارس
+                        </h3>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs px-2.5 py-1 rounded-full font-bold">طلبات جديدة</span>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg border">
+                            <div>
+                                <h4 class="font-bold text-sm text-gray-800">مدرسة النصر الرسمية لغات</h4>
+                                <p class="text-xs text-gray-500">محافظة الإسكندرية - المرحلة الإعدادية</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="approveSchool('مدرسة النصر')" class="bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-1.5 rounded-md transition flex items-center gap-1">
+                                    <i class="fa-solid fa-check"></i> قبول
+                                </button>
+                                <button onclick="rejectSchool('مدرسة النصر')" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1.5 rounded-md transition flex items-center gap-1">
+                                    <i class="fa-solid fa-xmark"></i> رفض
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+                <!-- 2. Ad Management Unit & Button -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-amber-500">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                            <i class="fa-solid fa-rectangle-ad text-amber-500"></i> إدارة وإضافة الإعلانات
+                        </h3>
+                        <button onclick="openAdModal()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 font-bold shadow-sm">
+                            <i class="fa-solid fa-plus-circle"></i> إضافة إعلان جديد
+                        </button>
+                    </div>
+                    
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-lg text-center">
+                        <i class="fa-solid fa-bullhorn text-amber-600 text-2xl mb-2"></i>
+                        <p class="text-xs text-amber-800 font-semibold">تَحكم في ظهور البانرات الإعلانية والسناتر التعليمية لحظياً لتظهر لجميع الطلاب والمعلمين بـ 27 محافظة.</p>
+                    </div>
+                </div>
 
-        // Make db available globally for our app functions
-        window.db = db;
-        window.firebaseModules = { collection, addDoc, getDocs, onSnapshot, query, where, doc, getDoc };
+            </div>
 
-        // Start App
-        window.onload = function() {
-            showHome();
-        };
-    </script>
+            <!-- Filtering by Governorates & Stages -->
+            <section class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-map-location-dot text-indigo-600"></i> فلترة المحافظات والمراحل التعليمية
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 mb-1">اختر المحافظة (27 محافظة)</label>
+                        <select class="w-full border rounded-lg p-2.5 text-sm bg-gray-50">
+                            <option value="">جميع المحافظات المصرية</option>
+                            <option>القاهرة</option><option>الإسكندرية</option><option>الجيزة</option><option>الدقهلية</option><option>الشرقية</option><option>المنوفية</option><option>الغربية</option><option>القليوبية</option><option>البحيرة</option><option>كفر الشيخ</option><option>دمياط</option><option>بورسعيد</option><option>الإسماعيلية</option><option>السويس</option><option>شمال سيناء</option><option>جنوب سيناء</option><option>الفيوم</option><option>بني سويف</option><option>المنيا</option><option>أسيوط</option><option>سوهاج</option><option>قنا</option><option>الأقصر</option><option>أسوان</option><option>البحر الأحمر</option><option>الوادي الجديد</option><option>مطروح</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 mb-1">اختر المرحلة التعليمية</label>
+                        <select class="w-full border rounded-lg p-2.5 text-sm bg-gray-50">
+                            <option value="">جميع المراحل (تأسيسي، ابتدائي، إعدادي، ثانوي، أزهري، جامعي)</option>
+                            <option>رياض الأطفال / تأسيسي</option>
+                            <option>المرحلة الابتدائية</option>
+                            <option>المرحلة الإعدادية</option>
+                            <option>المرحلة الثانوية العامة</option>
+                            <option>المرحلة الأزهرية</option>
+                            <option>المرحلة الجامعية</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
 
-    <!-- Application Logic Script -->
+        </div>
+
+    </main>
+
+    <!-- JavaScript Control Functions -->
     <script>
-        // Data sources for dropdowns
-        const governorates = [
-            "القاهرة", "الجيزة", "الإسكندرية", "الدقهلية", "الشرقية", "القليوبية", "كفر الشيخ", 
-            "المنوفية", "الغربية", "البحيرة", "الفيوم", "بني سويف", "المنيا", "أسيوط", 
-            "سوهاج", "قنا", "الأقصر", "أسوان", "مطروح", "الوادي الجديد", "الراحر الأحمر", 
-            "شمال سيناء", "جنوب سيناء", "بورسعيد", "الإسماعيلية", "السويس", "دمياط"
-        ];
-
-        const educationData = {
-            "تأسيس": ["تأسيس لغة عربية ونور البيان", "تأسيس لغة إنجليزية (Phonics)", "تأسيس رياضيات وحساب", "تأسيس لغات (Math & Science)"],
-            "المرحلة الابتدائية": ["لغة عربية", "لغة إنجليزية", "رياضيات / Math", "علوم / Science", "دراسات اجتماعية", "تربية دينية", "تكنولوجيا المعلومات ICT"],
-            "المرحلة الإعدادية": ["لغة عربية", "لغة إنجليزية", "رياضيات / Math", "علوم / Science", "دراسات اجتماعية", "لغة ثانية (فرنسي/ألماني)"],
-            "مرحلة الثانوي العام": ["لغة عربية", "لغة إنجليزية", "لغة ثانية (فرنسي/ألماني/إيطالي/إسباني)", "رياضيات محتلفة (تفاضل/تكامل/ميكانيكا)", "فيزياء / Physics", "كيمياء / Chemistry", "أحياء / Biology", "جيولوجيا", "تاريخ", "جغرافيا", "فلسفة ومنطق", "علم نفس واجتماع"],
-            "المرحلة الأزهرية (إعدادي وثانوي)": ["القرآن الكريم وعلومه", "فقه (شافعي/حنفي/مالكي)", "توحيد وسيرة", "تفسير وحديث", "نحو وصرف", "بلاغة وأدب", "مواد ثقافية (رياضيات/علوم/فيزياء/كيمياء)"],
-            "التعليم الجامعي": ["كليات الطب والعلوم الطبية", "كليات الهندسة والحاسبات", "كليات العلوم", "كليات التجارة وإدارة الأعمال", "كليات الآداب والتربية", "كليات الشريعة والقانون واللغة العربية", "كليات الحقوق", "كليات اللغات والترجمة"]
-        };
-
-        window.showHome = function() {
-            document.getElementById('header-nav').innerHTML = '';
-            document.getElementById('main-content').innerHTML = `
-                <div class="text-center py-10">
-                    <h1 class="text-3xl font-bold text-gray-800 mb-4">مرحباً بك في المنصة التعليمية السحابية</h1>
-                    <p class="text-gray-600 mb-10">يرجى اختيار بوابة الدخول المناسبة لك للمتابعة</p>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                        <!-- Admin Login -->
-                        <div onclick="openAdminPortal()" class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition cursor-pointer border-t-4 border-indigo-600">
-                            <i class="fa-solid fa-user-shield text-4xl text-indigo-600 mb-4"></i>
-                            <h2 class="text-xl font-bold mb-2">بوابة الإدارة</h2>
-                            <p class="text-sm text-gray-500">إدارة المدرسين، الجداول، المتابعة المالية، والإشعارات اللحظية.</p>
-                        </div>
-
-                        <!-- Teacher Login -->
-                        <div onclick="openTeacherAuth()" class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition cursor-pointer border-t-4 border-emerald-600">
-                            <i class="fa-solid fa-chalkboard-user text-4xl text-emerald-600 mb-4"></i>
-                            <h2 class="text-xl font-bold mb-2">بوابة المدرس</h2>
-                            <p class="text-sm text-gray-500">تسجيل بياناتك، إدارة طلابك، رفع الفيديوهات، ومتابعة الحسابات.</p>
-                        </div>
-
-                        <!-- Parent Login -->
-                        <div onclick="openParentAuth()" class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition cursor-pointer border-t-4 border-amber-600">
-                            <i class="fa-solid fa-user-group text-4xl text-amber-600 mb-4"></i>
-                            <h2 class="text-xl font-bold mb-2">بوابة ولي الأمر</h2>
-                            <p class="text-sm text-gray-500">تسجيل الدخول بكود الطالب للاطلاع على ملفات وفيديوهات المدرس.</p>
-                        </div>
-                    </div>
-                </div>
-            `;
+        function approveSchool(schoolName) {
+            alert("تم قبول طلب انضمام " + schoolName + " بنجاح وتفعيلها في المنظومة.");
         }
 
-        // ==================== ADMIN PORTAL ====================
-        window.openAdminPortal = async function() {
-            document.getElementById('header-nav').innerHTML = `<button onclick="showHome()" class="bg-indigo-700 px-4 py-2 rounded text-sm hover:bg-indigo-800">الرئيسية</button>`;
-            
-            document.getElementById('main-content').innerHTML = `
-                <div class="space-y-6">
-                    <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm">
-                        <h2 class="text-xl font-bold text-indigo-600"><i class="fa-solid fa-user-shield ml-2"></i> لوحة تحكم الإدارة (سحابي مباشر)</h2>
-                        <span id="notif-badge" class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-bold">إشعارات المدرسين الجدد: 0</span>
-                    </div>
-
-                    <div class="flex border-b space-x-4 space-x-reverse">
-                        <button onclick="switchAdminTab('teachers')" id="tab-btn-teachers" class="py-2 px-4 border-b-2 border-indigo-600 font-bold text-indigo-600">بيانات المدرسين والبحث</button>
-                        <button onclick="switchAdminTab('financial')" id="tab-btn-financial" class="py-2 px-4 text-gray-500 font-bold">أرصدة الحسابات للمدرسين</button>
-                    </div>
-
-                    <div id="admin-tab-content"></div>
-                </div>
-            `;
-
-            const { collection, onSnapshot } = window.firebaseModules;
-            onSnapshot(collection(window.db, "notifications"), (snapshot) => {
-                document.getElementById('notif-badge').innerText = `إشعارات المدرسين الجدد: ${snapshot.docs.length}`;
-            });
-
-            switchAdminTab('teachers');
-        }
-
-        window.switchAdminTab = async function(tab) {
-            document.getElementById('tab-btn-teachers').className = tab === 'teachers' ? 'py-2 px-4 border-b-2 border-indigo-600 font-bold text-indigo-600' : 'py-2 px-4 text-gray-500 font-bold';
-            document.getElementById('tab-btn-financial').className = tab === 'financial' ? 'py-2 px-4 border-b-2 border-indigo-600 font-bold text-indigo-600' : 'py-2 px-4 text-gray-500 font-bold';
-
-            const container = document.getElementById('admin-tab-content');
-            const { collection, getDocs } = window.firebaseModules;
-            
-            const querySnapshot = await getDocs(collection(window.db, "teachers"));
-            let teachers = [];
-            querySnapshot.forEach((doc) => {
-                teachers.push({ id: doc.id, ...doc.data() });
-            });
-
-            window.allTeachersCache = teachers;
-
-            if (tab === 'teachers') {
-                container.innerHTML = `
-                    <div class="bg-white p-6 rounded-lg shadow-sm space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" id="search-name" placeholder="بحث باسم المدرس..." oninput="filterTeachersTable()" class="border p-2 rounded focus:outline-indigo-600">
-                            <input type="text" id="search-subject" placeholder="بحث بالتخصص/المادة..." oninput="filterTeachersTable()" class="border p-2 rounded focus:outline-indigo-600">
-                            <select id="search-gov" onchange="filterTeachersTable()" class="border p-2 rounded focus:outline-indigo-600">
-                                <option value="">كل المحافظات</option>
-                                ${governorates.map(g => `<option value="${g}">${g}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-right border-collapse">
-                                <thead>
-                                    <tr class="bg-gray-100 border-b">
-                                        <th class="p-3">الاسم</th>
-                                        <th class="p-3">رقم الهاتف</th>
-                                        <th class="p-3">المحافظة</th>
-                                        <th class="p-3">المرحلة</th>
-                                        <th class="p-3">التخصص / المادة</th>
-                                        <th class="p-3">الخبرة</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="teachers-table-body">
-                                    ${renderTeachersRows(teachers)}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                `;
-            } else if (tab === 'financial') {
-                container.innerHTML = `
-                    <div class="bg-white p-6 rounded-lg shadow-sm space-y-4">
-                        <h3 class="font-bold text-lg mb-4">أرصدة حسابات المدرسين</h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-right border-collapse">
-                                <thead>
-                                    <tr class="bg-gray-100 border-b">
-                                        <th class="p-3">المدرس</th>
-                                        <th class="p-3">إجمالي المستحق</th>
-                                        <th class="p-3">المبلغ المستلم</th>
-                                        <th class="p-3">المبلغ المتبقي</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${teachers.map(t => `
-                                        <tr class="border-b hover:bg-gray-50">
-                                            <td class="p-3">${t.name}</td>
-                                            <td class="p-3 font-bold text-indigo-600">${t.total || 1500} ج.م</td>
-                                            <td class="p-3 text-green-600">${t.received || 500} ج.م</td>
-                                            <td class="p-3 text-red-600">${(t.total || 1500) - (t.received || 500)} ج.م</td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                `;
+        function rejectSchool(schoolName) {
+            if(confirm("هل أنت متأكد من رفض طلب " + schoolName + "؟")) {
+                alert("تم رفض الطلب بنجاح.");
             }
         }
 
-        window.renderTeachersRows = function(teachers) {
-            if(teachers.length === 0) return `<tr><td colspan="6" class="p-4 text-center text-gray-500">لا توجد بيانات مطابقة</td></tr>`;
-            return teachers.map(t => `
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="p-3 font-semibold">${t.name}</td>
-                    <td class="p-3">${t.phone}</td>
-                    <td class="p-3"><span class="bg-gray-100 px-2 py-1 rounded text-xs">${t.gov}</span></td>
-                    <td class="p-3 text-sm text-indigo-600 font-bold">${t.stage || '-'}</td>
-                    <td class="p-3 text-sm font-semibold">${t.specialty || '-'}</td>
-                    <td class="p-3">${t.exp}</td>
-                </tr>
-            `).join('');
-        }
-
-        window.filterTeachersTable = function() {
-            let nameQuery = document.getElementById('search-name').value.toLowerCase();
-            let subQuery = document.getElementById('search-subject').value.toLowerCase();
-            let govQuery = document.getElementById('search-gov').value;
-
-            let filtered = window.allTeachersCache.filter(t => {
-                let matchName = (t.name || '').toLowerCase().includes(nameQuery);
-                let matchSub = (t.specialty || '').toLowerCase().includes(subQuery) || (t.stage || '').toLowerCase().includes(subQuery);
-                let matchGov = govQuery === '' || t.gov === govQuery;
-                return matchName && matchSub && matchGov;
-            });
-
-            document.getElementById('teachers-table-body').innerHTML = window.renderTeachersRows(filtered);
-        }
-
-        // ==================== TEACHER PORTAL ====================
-        window.openTeacherAuth = function() {
-            document.getElementById('header-nav').innerHTML = `<button onclick="showHome()" class="bg-emerald-700 px-4 py-2 rounded text-sm hover:bg-emerald-800">الرئيسية</button>`;
-            document.getElementById('main-content').innerHTML = `
-                <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-md space-y-6">
-                    <h2 class="text-2xl font-bold text-emerald-600 text-center"><i class="fa-solid fa-chalkboard-user ml-2"></i> بوابة المدرسين</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block mb-1 font-semibold">رقم الهاتف (للدخول):</label>
-                            <input type="text" id="teacher-login-phone" placeholder="أدخل رقم هاتفك المسجل..." class="w-full border p-2 rounded focus:outline-emerald-600">
-                        </div>
-                        <button onclick="loginTeacher()" class="w-full bg-emerald-600 text-white py-2 rounded font-bold hover:bg-emerald-700">تسجيل الدخول</button>
-                        <hr>
-                        <div class="text-center">
-                            <p class="text-sm text-gray-500 mb-2">ليس لديك حساب؟</p>
-                            <button onclick="renderTeacherRegister()" class="text-emerald-600 font-bold hover:underline">تسجيل مدرس جديد سحابياً</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        window.renderTeacherRegister = function() {
-            document.getElementById('main-content').innerHTML = `
-                <div class="max-w-lg mx-auto bg-white p-8 rounded-xl shadow-md space-y-6">
-                    <h2 class="text-2xl font-bold text-emerald-600 text-center">تسجيل مدرس جديد</h2>
-                    <form onsubmit="registerTeacher(event)" class="space-y-4">
-                        <div>
-                            <label class="block mb-1 font-semibold">الاسم بالكامل:</label>
-                            <input type="text" id="reg-name" required class="w-full border p-2 rounded focus:outline-emerald-600">
-                        </div>
-                        <div>
-                            <label class="block mb-1 font-semibold">رقم الهاتف:</label>
-                            <input type="text" id="reg-phone" required class="w-full border p-2 rounded focus:outline-emerald-600">
-                        </div>
-                        <div>
-                            <label class="block mb-1 font-semibold">المحافظة:</label>
-                            <select id="reg-gov" required class="w-full border p-2 rounded focus:outline-emerald-600">
-                                <option value="">اختر المحافظة...</option>
-                                ${governorates.map(g => `<option value="${g}">${g}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block mb-1 font-semibold">المرحلة الدراسية / القطاع:</label>
-                            <select id="reg-stage" onchange="updateSpecialtiesOptions()" required class="w-full border p-2 rounded focus:outline-emerald-600">
-                                <option value="">اختر المرحلة الدراسية...</option>
-                                ${Object.keys(educationData).map(stage => `<option value="${stage}">${stage}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block mb-1 font-semibold">التخصص / المادة الدراسية:</label>
-                            <select id="reg-specialty" required class="w-full border p-2 rounded focus:outline-emerald-600">
-                                <option value="">اختر المرحلة أولاً...</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block mb-1 font-semibold">عدد سنوات الخبرة:</label>
-                            <input type="text" id="reg-exp" placeholder="مثال: 5 سنوات" required class="w-full border p-2 rounded focus:outline-emerald-600">
-                        </div>
-                        <button type="submit" class="w-full bg-emerald-600 text-white py-2 rounded font-bold hover:bg-emerald-700">إرسال التسجيل للإدارة</button>
-                        <button type="button" onclick="openTeacherAuth()" class="w-full text-gray-500 py-1 text-sm">العودة لتسجيل الدخول</button>
-                    </form>
-                </div>
-            `;
-        }
-
-        window.updateSpecialtiesOptions = function() {
-            let stage = document.getElementById('reg-stage').value;
-            let specialtySelect = document.getElementById('reg-specialty');
-            specialtySelect.innerHTML = '<option value="">اختر التخصص / المادة...</option>';
-
-            if (stage && educationData[stage]) {
-                educationData[stage].forEach(sub => {
-                    specialtySelect.innerHTML += `<option value="${sub}">${sub}</option>`;
-                });
+        function openAdModal() {
+            let newAd = prompt("أدخل نص الإعلان الجديد أو اسم السنتر التعليمي:");
+            if (newAd) {
+                document.getElementById('currentAdText').innerText = newAd;
+                alert("تم نشر الإعلان وتحديثه على واجهة المنصة لجميع المستخدمين فوراً!");
             }
         }
 
-        window.registerTeacher = async function(e) {
-            e.preventDefault();
-            let name = document.getElementById('reg-name').value;
-            let phone = document.getElementById('reg-phone').value;
-            let gov = document.getElementById('reg-gov').value;
-            let stage = document.getElementById('reg-stage').value;
-            let specialty = document.getElementById('reg-specialty').value;
-            let exp = document.getElementById('reg-exp').value;
-
-            try {
-                const { collection, addDoc } = window.firebaseModules;
-                await addDoc(collection(window.db, "teachers"), {
-                    name, phone, gov, stage, specialty, exp, total: 1500, received: 500, createdAt: new Date().toISOString()
-                });
-
-                await addDoc(collection(window.db, "notifications"), {
-                    message: `انضم مدرس جديد: ${name} (${stage} - ${specialty}) - ${gov}`,
-                    date: new Date().toLocaleDateString('ar-EG')
-                });
-
-                alert('تم تسجيل بياناتك بنجاح ووصل الإشعار للإدارة فوراً!');
-                openTeacherAuth();
-            } catch (err) {
-                console.error(err);
-                alert('حدث خطأ أثناء التسجيل، تأكد من الاتصال بالإنترنت.');
-            }
-        }
-
-        window.loginTeacher = async function() {
-            let phone = document.getElementById('teacher-login-phone').value.trim();
-            if(!phone) return alert('الرجاء إدخال رقم الهاتف');
-
-            const { collection, getDocs, query, where } = window.firebaseModules;
-            const q = query(collection(window.db, "teachers"), where("phone", "==", phone));
-            const querySnapshot = await getDocs(q);
-
-            if (querySnapshot.empty) {
-                alert('رقم الهاتف غير مسجل في قاعدة البيانات!');
-            } else {
-                let teacherData = null;
-                querySnapshot.forEach((doc) => {
-                    teacherData = { id: doc.id, ...doc.data() };
-                });
-                renderTeacherDashboard(teacherData);
-            }
-        }
-
-        window.renderTeacherDashboard = function(teacher) {
-            document.getElementById('header-nav').innerHTML = `
-                <div class="flex items-center space-x-4 space-x-reverse">
-                    <span class="text-sm font-semibold">مرحباً، ${teacher.name}</span>
-                    <button onclick="openTeacherAuth()" class="bg-emerald-700 px-3 py-1 rounded text-sm">تسجيل خروج</button>
-                </div>
-            `;
-
-            document.getElementById('main-content').innerHTML = `
-                <div class="space-y-6">
-                    <h2 class="text-xl font-bold text-emerald-600"><i class="fa-solid fa-chalkboard-user ml-2"></i> لوحة تحكم المدرس</h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Upload Files -->
-                        <div class="bg-white p-6 rounded-lg shadow-sm space-y-4">
-                            <h3 class="font-bold text-lg">رفع ملفات وفيديوهات (تظهر لولي الأمر فوراً)</h3>
-                            <div class="space-y-3">
-                                <input type="text" id="file-title" placeholder="عنوان المحاضرة أو الملف..." class="w-full border p-2 rounded text-sm">
-                                <input type="text" id="file-link" placeholder="رابط الملف أو الفيديو (YouTube / Drive)..." class="w-full border p-2 rounded text-sm">
-                                <button onclick="uploadTeacherFile('${teacher.phone}')" class="bg-emerald-600 text-white px-4 py-2 rounded text-sm font-bold w-full">رفع ونشر المحتوى</button>
-                            </div>
-                        </div>
-
-                        <!-- Register Student with Code -->
-                        <div class="bg-white p-6 rounded-lg shadow-sm space-y-4">
-                            <h3 class="font-bold text-lg">تسجيل طالب جديد بالكود الخاص</h3>
-                            <div class="space-y-3">
-                                <input type="text" id="student-name" placeholder="اسم الطالب..." class="w-full border p-2 rounded text-sm">
-                                <input type="text" id="student-code" placeholder="كود دخول ولي الأمر (مثال: ST2026)..." class="w-full border p-2 rounded text-sm">
-                                <button onclick="registerStudent('${teacher.phone}')" class="bg-emerald-600 text-white px-4 py-2 rounded text-sm font-bold w-full">حفظ كود الطالب</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Financial Summary -->
-                    <div class="bg-white p-6 rounded-lg shadow-sm space-y-4">
-                        <h3 class="font-bold text-lg">قائمة الحسابات المالية</h3>
-                        <div class="bg-gray-50 p-4 rounded space-y-2 text-sm">
-                            <p>إجمالي المستحق: <span class="font-bold text-emerald-600">${teacher.total || 1500} ج.م</span></p>
-                            <p>المبلغ المستلم: <span class="font-bold text-blue-600">${teacher.received || 500} ج.م</span></p>
-                            <p>المبلغ المتبقي: <span class="font-bold text-red-600">${(teacher.total || 1500) - (teacher.received || 500)} ج.م</span></p>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        window.uploadTeacherFile = async function(teacherPhone) {
-            let title = document.getElementById('file-title').value.trim();
-            let link = document.getElementById('file-link').value.trim();
-            if(!title || !link) return alert('الرجاء إدخال العنوان والرابط');
-
-            try {
-                const { collection, addDoc } = window.firebaseModules;
-                await addDoc(collection(window.db, "files"), {
-                    teacherPhone, title, link, createdAt: new Date().toISOString()
-                });
-                alert('تم رفع المحتوى بنجاح وسيراه ولي الأمر فوراً!');
-                document.getElementById('file-title').value = '';
-                document.getElementById('file-link').value = '';
-            } catch(e) {
-                console.error(e);
-                alert('حدث خطأ أثناء الرفع');
-            }
-        }
-
-        window.registerStudent = async function(teacherPhone) {
-            let name = document.getElementById('student-name').value.trim();
-            let code = document.getElementById('student-code').value.trim();
-            if(!name || !code) return alert('الرجاء إدخال اسم الطالب والكود');
-
-            try {
-                const { collection, addDoc } = window.firebaseModules;
-                await addDoc(collection(window.db, "students"), {
-                    name, code, teacherPhone, createdAt: new Date().toISOString()
-                });
-                alert(`تم تسجيل الطالب بنجاح! كود ولي الأمر هو: ${code}`);
-                document.getElementById('student-name').value = '';
-                document.getElementById('student-code').value = '';
-            } catch(e) {
-                console.error(e);
-                alert('حدث خطأ أثناء التسجيل');
-            }
-        }
-
-        // ==================== PARENT PORTAL ====================
-        window.openParentAuth = function() {
-            document.getElementById('header-nav').innerHTML = `<button onclick="showHome()" class="bg-amber-700 px-4 py-2 rounded text-sm hover:bg-amber-800">الرئيسية</button>`;
-            document.getElementById('main-content').innerHTML = `
-                <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-md space-y-6">
-                    <h2 class="text-2xl font-bold text-amber-600 text-center"><i class="fa-solid fa-user-group ml-2"></i> بوابة ولي الأمر</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block mb-1 font-semibold">كود الطالب:</label>
-                            <input type="text" id="parent-student-code" placeholder="أدخل كود الطالب..." class="w-full border p-2 rounded focus:outline-amber-600">
-                        </div>
-                        <button onclick="loginParent()" class="w-full bg-amber-600 text-white py-2 rounded font-bold hover:bg-amber-700">دخول للاطلاع على المحتوى</button>
-                    </div>
-                </div>
-            `;
-        }
-
-        window.loginParent = async function() {
-            let code = document.getElementById('parent-student-code').value.trim();
-            if(!code) return alert('الرجاء إدخال كود الطالب');
-
-            const { collection, getDocs, query, where } = window.firebaseModules;
-            const q = query(collection(window.db, "students"), where("code", "==", code));
-            const querySnapshot = await getDocs(q);
-
-            if (querySnapshot.empty) {
-                return alert('كود الطالب غير صحيح!');
-            }
-
-            let student = null;
-            querySnapshot.forEach((doc) => {
-                student = doc.data();
-            });
-
-            // Get teacher details
-            const tQuery = query(collection(window.db, "teachers"), where("phone", "==", student.teacherPhone));
-            const tSnapshot = await getDocs(tQuery);
-            let teacher = null;
-            tSnapshot.forEach((doc) => {
-                teacher = doc.data();
-            });
-
-            // Get files uploaded by this teacher
-            const fQuery = query(collection(window.db, "files"), where("teacherPhone", "==", student.teacherPhone));
-            const fSnapshot = await getDocs(fQuery);
-            let files = [];
-            fSnapshot.forEach((doc) => {
-                files.push(doc.data());
-            });
-
-            document.getElementById('header-nav').innerHTML = `
-                <div class="flex items-center space-x-4 space-x-reverse">
-                    <span class="text-sm font-semibold">الطالب: ${student.name}</span>
-                    <button onclick="openParentAuth()" class="bg-amber-700 px-3 py-1 rounded text-sm">خروج</button>
-                </div>
-            `;
-
-            document.getElementById('main-content').innerHTML = `
-                <div class="space-y-6">
-                    <div class="bg-white p-6 rounded-lg shadow-sm border-r-4 border-amber-600">
-                        <h2 class="text-xl font-bold text-amber-600 mb-2">مرحباً بك في بوابة ولي الأمر</h2>
-                        <p class="text-gray-600">المدرس الخاص بابنك/بنتك: <span class="font-bold text-gray-800">${teacher ? teacher.name : 'غير محدد'}</span> (${teacher ? (teacher.stage + ' - ' + teacher.specialty) : ''})</p>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-lg shadow-sm space-y-4">
-                        <h3 class="font-bold text-lg mb-4">الملفات والفيديوهات الخاصة بالمدرس فقط</h3>
-                        ${files.length === 0 ? '<p class="text-gray-500">لا توجد ملفات مرفوعة حالياً من المدرس.</p>' : `
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                ${files.map(f => `
-                                    <div class="border p-4 rounded-lg flex justify-between items-center">
-                                        <div>
-                                            <h4 class="font-bold">${f.title}</h4>
-                                            <span class="text-xs text-gray-500">محتوى تعليمي معتمد</span>
-                                        </div>
-                                        <a href="${f.link}" target="_blank" class="bg-amber-600 text-white px-3 py-1 rounded text-sm hover:bg-amber-700">عرض الملف</a>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        `}
-                    </div>
-                </div>
-            `;
+        function switchView(viewName) {
+            alert("أنت تتصفح لوحة التحكم الرئيسية لإدارة المنصة.");
         }
     </script>
 </body>
-</html>
+                                                                                                                                                                                                                                                                                                                                      </html>
+                                                                                                                                                                                                                                                                                                                                      
