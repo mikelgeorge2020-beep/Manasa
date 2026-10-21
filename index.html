@@ -34,18 +34,6 @@
     <!-- Main Container -->
     <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
 
-        <!-- Public Announcement Banner Area -->
-        <div id="announcementBanner" class="bg-gradient-to-r from-amber-500 to-yellow-600 text-white p-4 rounded-xl shadow-md flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <i class="fa-solid fa-bullhorn text-2xl"></i>
-                <div>
-                    <h3 class="font-bold text-base">إعلان المنصة الرسمي</h3>
-                    <p class="text-xs text-amber-100" id="currentAdText">مرحباً بكم في المنصة التعليمية الرقمية لجميع المحافظات والمراحل الدراسية.</p>
-                </div>
-            </div>
-            <span class="bg-black bg-opacity-20 text-xs px-2.5 py-1 rounded-full uppercase font-bold">نشط</span>
-        </div>
-
         <!-- 3 Main Tabs Switcher -->
         <div class="flex border-b border-gray-300 bg-white rounded-t-xl shadow-sm overflow-hidden">
             <button onclick="switchTab('student')" id="tab-student" class="flex-1 py-3 px-4 text-center font-bold text-sm text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50 transition flex items-center justify-center gap-2">
@@ -63,7 +51,7 @@
         <div id="content-student" class="tab-content space-y-6">
             <section class="bg-white p-6 rounded-xl shadow-md">
                 <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-map-location-dot text-indigo-600"></i> فلترة المحافظات والمراحل الدراسية للطلاب
+                    <i class="fa-solid fa-map-location-dot text-indigo-600"></i> فلترة المحافظات والمراحل الدراسية
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -76,7 +64,7 @@
                     <div>
                         <label class="block text-xs font-bold text-gray-600 mb-1">اختر المرحلة التعليمية</label>
                         <select class="w-full border rounded-lg p-2.5 text-sm bg-gray-50">
-                            <option value="">جميع المراحل (تأسيسي، ابتدائي، إعدادي، ثانوي، أزهري، جامعي)</option>
+                            <option value="">جميع المراحل</option>
                             <option>رياض الأطفال / تأسيسي</option>
                             <option>المرحلة الابتدائية</option>
                             <option>المرحلة الإعدادية</option>
@@ -87,63 +75,21 @@
                     </div>
                 </div>
             </section>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-white p-5 rounded-xl shadow-sm border text-center">
-                    <i class="fa-solid fa-book-open text-3xl text-indigo-600 mb-2"></i>
-                    <h3 class="font-bold text-base">المناهج الدراسية</h3>
-                    <p class="text-xs text-gray-500 mt-1">تصفح الكتب والدروس التفاعلية لكل المراحل.</p>
-                </div>
-                <div class="bg-white p-5 rounded-xl shadow-sm border text-center">
-                    <i class="fa-solid fa-laptop-code text-3xl text-green-600 mb-2"></i>
-                    <h3 class="font-bold text-base">الاختبارات الإلكترونية</h3>
-                    <p class="text-xs text-gray-500 mt-1">اختبر مستواك واحصل على تقييم فوري.</p>
-                </div>
-                <div class="bg-white p-5 rounded-xl shadow-sm border text-center">
-                    <i class="fa-solid fa-video text-3xl text-purple-600 mb-2"></i>
-                    <h3 class="font-bold text-base">الحصص المباشرة</h3>
-                    <p class="text-xs text-gray-500 mt-1">احضر البث الحي مع نخبة المعلمين.</p>
-                </div>
-            </div>
         </div>
 
         <!-- TAB CONTENT 2: Teacher Portal -->
         <div id="content-teacher" class="tab-content space-y-6 hidden">
-            <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-indigo-600 flex justify-between items-center">
-                <div>
-                    <h3 class="text-lg font-bold text-gray-800">بوابة إدارة المعلمين</h3>
-                    <p class="text-xs text-gray-500 mt-1">سجل كمعلم لرفع الفيديوهات، إدارة الواجبات، ومتابعة درجات الطلاب.</p>
-                </div>
-                <button onclick="openRegisterModal('معلم')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-4 py-2.5 rounded-lg font-bold transition">
-                    <i class="fa-solid fa-user-plus"></i> تسجيل حساب معلم جديد
-                </button>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-white p-5 rounded-xl shadow-sm border">
-                    <h4 class="font-bold text-sm text-gray-800 mb-1"><i class="fa-solid fa-upload text-indigo-600"></i> رفع المناهج والملخصات</h4>
-                    <p class="text-xs text-gray-500">أضف ملفات الشرح واجعلها متاحة لطلاب محافظتك.</p>
-                </div>
-                <div class="bg-white p-5 rounded-xl shadow-sm border">
-                    <h4 class="font-bold text-sm text-gray-800 mb-1"><i class="fa-solid fa-clipboard-question text-green-600"></i> تصميم الامتحانات</h4>
-                    <p class="text-xs text-gray-500">أنشئ اختبارات اختيار من متعدد بتصحيح آلي.</p>
-                </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-indigo-600">
+                <h3 class="text-lg font-bold text-gray-800 mb-2">بوابة المعلمين</h3>
+                <p class="text-sm text-gray-600">تسجيل الدخول وإدارة الفصول والمناهج الدراسية.</p>
             </div>
         </div>
 
         <!-- TAB CONTENT 3: Parent Portal -->
         <div id="content-parent" class="tab-content space-y-6 hidden">
-            <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-purple-600 flex justify-between items-center">
-                <div>
-                    <h3 class="text-lg font-bold text-gray-800">بوابة متابعة أولياء الأمور</h3>
-                    <p class="text-xs text-gray-500 mt-1">تابع تقارير الحضور والغياب ومستوى ابناءك الدراسي أولاً بأول.</p>
-                </div>
-                <button onclick="openRegisterModal('ولي أمر')" class="bg-purple-600 hover:bg-purple-700 text-white text-xs px-4 py-2.5 rounded-lg font-bold transition">
-                    <i class="fa-solid fa-user-plus"></i> ربط حساب ولي أمر
-                </button>
-            </div>
-            <div class="bg-white p-5 rounded-xl shadow-sm border">
-                <h4 class="font-bold text-sm text-gray-800 mb-2"><i class="fa-solid fa-chart-line text-purple-600"></i> التقارير والدرجات الشهرية</h4>
-                <p class="text-xs text-gray-500">سجل رقم طالبك القومي أو الكود المدرسي للاطلاع على النتيجة فور صدورها.</p>
+            <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-purple-600">
+                <h3 class="text-lg font-bold text-gray-800 mb-2">بوابة أولياء الأمور</h3>
+                <p class="text-sm text-gray-600">متابعة تقارير حضور ومستوى الأبناء الدراسي.</p>
             </div>
         </div>
 
@@ -167,51 +113,6 @@
                     <h3 class="text-2xl font-bold text-gray-800 mt-1">27 / 27</h3>
                 </div>
             </section>
-
-            <!-- School Requests & Ad Management Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- 1. School Approval System -->
-                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-indigo-600">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-                            <i class="fa-solid fa-school text-indigo-600"></i> طلبات انضمام المدارس
-                        </h3>
-                        <span class="bg-yellow-100 text-yellow-800 text-xs px-2.5 py-1 rounded-full font-bold">طلبات جديدة</span>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg border">
-                            <div>
-                                <h4 class="font-bold text-sm text-gray-800">مدرسة النصر الرسمية لغات</h4>
-                                <p class="text-xs text-gray-500">محافظة الإسكندرية - المرحلة الإعدادية</p>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button onclick="approveSchool('مدرسة النصر')" class="bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-1.5 rounded-md transition flex items-center gap-1">
-                                    <i class="fa-solid fa-check"></i> قبول
-                                </button>
-                                <button onclick="rejectSchool('مدرسة النصر')" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1.5 rounded-md transition flex items-center gap-1">
-                                    <i class="fa-solid fa-xmark"></i> رفض
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2. Ad Management Unit -->
-                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-amber-500">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-                            <i class="fa-solid fa-rectangle-ad text-amber-500"></i> إدارة وإضافة الإعلانات
-                        </h3>
-                        <button onclick="openAdModal()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 font-bold shadow-sm">
-                            <i class="fa-solid fa-plus-circle"></i> إضافة إعلان جديد
-                        </button>
-                    </div>
-                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-lg text-center">
-                        <i class="fa-solid fa-bullhorn text-amber-600 text-2xl mb-2"></i>
-                        <p class="text-xs text-amber-800 font-semibold">تحكم في ظهور البانرات الإعلانية والسناتر التعليمية لحظياً لجميع المحافظات الـ 27.</p>
-                    </div>
-                </div>
-            </div>
         </div>
 
     </main>
@@ -219,11 +120,9 @@
     <!-- JavaScript Control Functions -->
     <script>
         function switchTab(tabId) {
-            // Hide all tab contents
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(el => el.classList.add('hidden'));
 
-            // Remove active styles from top buttons
             document.getElementById('tab-student').className = "flex-1 py-3 px-4 text-center font-bold text-sm text-gray-600 hover:text-indigo-600 transition flex items-center justify-center gap-2";
             document.getElementById('tab-teacher').className = "flex-1 py-3 px-4 text-center font-bold text-sm text-gray-600 hover:text-indigo-600 transition flex items-center justify-center gap-2";
             document.getElementById('tab-parent').className = "flex-1 py-3 px-4 text-center font-bold text-sm text-gray-600 hover:text-indigo-600 transition flex items-center justify-center gap-2";
@@ -238,34 +137,7 @@
                 activeBtn.className = "flex-1 py-3 px-4 text-center font-bold text-sm text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50 transition flex items-center justify-center gap-2";
             }
         }
-
-        function approveSchool(schoolName) {
-            alert("تم قبول طلب انضمام " + schoolName + " بنجاح وتفعيلها في المنظومة.");
-        }
-
-        function rejectSchool(schoolName) {
-            if(confirm("هل أنت متأكد من رفض طلب " + schoolName + "؟")) {
-                alert("تم رفض الطلب بنجاح.");
-            }
-        }
-
-        function openAdModal() {
-            let newAd = prompt("أدخل نص الإعلان الجديد أو اسم السنتر التعليمي:");
-            if (newAd) {
-                document.getElementById('currentAdText').innerText = newAd;
-                alert("تم نشر الإعلان وتحديثه على واجهة المنصة لجميع المستخدمين فوراً!");
-            }
-        }
-
-        function openRegisterModal(roleType) {
-            let userName = prompt("أدخل الاسم الكامل لـ (" + roleType + "):");
-            if (userName) {
-                let userPhone = prompt("أدخل رقم الهاتف أو البريد الإلكتروني للتواصل:");
-                if (userPhone) {
-                    alert("تم تسجيل حساب " + roleType + " (" + userName + ") بنجاح في المنظومة بانتظار التفعيل!");
-                }
-            }
-        }
     </script>
 </body>
-</html>
+    </html>
+    
