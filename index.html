@@ -33,3 +33,156 @@ th,td{border-bottom:1px solid var(--bd);padding:7px 6px;text-align:right;white-s
 .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 a{color:var(--pri)}
 body{font-family:"Cairo","Segoe UI",Tahoma,Arial,sans-serif}:root{--pri:#1e5bd8;--acc:#f5a524}
+.hero{text-align:center;padding:26px 12px 18px;background:linear-gradient(135deg,#1e3a8a,#2563eb 60%,#f5a524);color:#fff;border-radius:20px;margin-bottom:16px;box-shadow:0 8px 24px rgba(30,64,175,.25)}
+.hero h1{color:#fff;margin:6px 0;font-size:1.9rem}.hero p{margin:0;opacity:.92}.logo{font-size:2.6rem}
+.ic{box-shadow:0 4px 14px rgba(0,0,0,.08);transition:transform .15s}.ic:active{transform:scale(.97)}
+.ic .e{width:64px;height:64px;line-height:64px;border-radius:18px;margin:0 auto 6px;font-size:2rem}
+.c1 .e{background:#dbeafe}.c2 .e{background:#dcfce7}.c3 .e{background:#fef3c7}.c4 .e{background:#fce7f3}
+.card{box-shadow:0 2px 10px rgba(0,0,0,.05)}button.p{background:linear-gradient(135deg,#1e5bd8,#3b82f6)}
+</style>
+</head>
+<body>
+<div class="w"><div id="nb" class="card bad" style="display:none"></div><div id="app">جارٍ التحميل...</div></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script>
+// ====== ضع بيانات مشروع Firebase هنا (من إعدادات المشروع) ======
+const FIREBASE_CONFIG={apiKey:"AIzaSyDEIZMnt9q3Z9ixsVLjBGGimlYg-1s_Hgk",authDomain:"manasa-f075c.firebaseapp.com",projectId:"manasa-f075c",storageBucket:"manasa-f075c.firebasestorage.app",messagingSenderId:"1046013514696",appId:"1:1046013514696:web:0ed1089aefcafd260b66fd"};
+// ================================================================
+const GOV=["القاهرة","الجيزة","الإسكندرية","القليوبية","الشرقية","الدقهلية","الغربية","المنوفية","البحيرة","كفر الشيخ","دمياط","بورسعيد","الإسماعيلية","السويس","الفيوم","بني سويف","المنيا","أسيوط","سوهاج","قنا","الأقصر","أسوان","البحر الأحمر","الوادي الجديد","مطروح","شمال سيناء","جنوب سيناء"];
+const SBS={"تأسيس":["القراءة والكتابة","الحساب","القرآن الكريم","اللغة الإنجليزية (حروف وكلمات)","مهارات أساسية"],
+"ابتدائي":["اللغة العربية","الرياضيات","اللغة الإنجليزية","العلوم","الدراسات الاجتماعية","الحاسب الآلي","التربية الدينية","اللغة الفرنسية"],
+"إعدادي":["اللغة العربية","الرياضيات","اللغة الإنجليزية","العلوم","الدراسات الاجتماعية","الحاسب الآلي","اللغة الفرنسية","التربية الدينية"],
+"ثانوي":["اللغة العربية","اللغة الإنجليزية","اللغة الفرنسية","اللغة الألمانية","الرياضيات","الفيزياء","الكيمياء","الأحياء","الجيولوجيا","التاريخ","الجغرافيا","الفلسفة والمنطق","علم النفس والاجتماع","الحاسب الآلي"],
+"تجاري":["المحاسبة","الاقتصاد","إدارة الأعمال","الإحصاء","الرياضيات","اللغة الإنجليزية","اللغة العربية","الحاسب الآلي"],
+"تعليم جامعي":["الهندسة","الطب والعلوم الطبية","الصيدلة","العلوم","التجارة","الحقوق","الآداب","التربية","الحاسبات والمعلومات","الاقتصاد والعلوم السياسية"],
+"تعليم عالي":["نظم المعلومات","المحاسبة","إدارة الأعمال","الهندسة","اللغات","الخدمة الاجتماعية"],
+"أزهري":["القرآن وتجويده","الفقه","التفسير","الحديث","النحو والصرف","البلاغة","اللغة الإنجليزية","الرياضيات","العلوم"],
+"دراسات عليا":["مناهج البحث العلمي","الإحصاء (SPSS)","إعداد الرسائل العلمية","اللغة الإنجليزية (IELTS/TOEFL)","تخصص الدراسة"]};
+const SUB=[...new Set(Object.values(SBS).flat())];
+const DAYS=["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"];
+const STG=["تأسيس","ابتدائي","إعدادي","ثانوي","تجاري","تعليم جامعي","تعليم عالي","أزهري","دراسات عليا"];
+const OKT=t=>!["pending","rejected"].includes(t.status);
+const ADMIN_EMAIL="mikelgeorge2020@gmail.com"; // بريد حساب الأدمن في Firebase Authentication
+const ADMIN_PIN="1234"; // للوضع التجريبي المحلي فقط (بدون Firebase)
+let FB=false,auth=null,unsubs=[];
+window.onerror=m=>{if(/^Script error/.test(m))return;const n=document.getElementById("nb");if(n){n.style.display="block";n.textContent="⚠️ خطأ: "+m}};
+const COLS=["teachers","students","sessions","payments","files","notifs","ann","attendance","ads"];
+let db=null,S={role:null,tab:null,me:null,sc:null,err:""},D={};COLS.forEach(c=>D[c]=[]);
+let pending=false;
+const $=id=>document.getElementById(id),v=id=>($(id)||{}).value||"";
+const h=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const opt=(a,sel)=>a.map(x=>`<option ${x===sel?"selected":""}>${h(x)}</option>`).join("");
+const dt=t=>new Date(t).toLocaleDateString("ar-EG");
+const nm=id=>(D.teachers.find(t=>t.id===id)||{}).name||"—";
+const tc=id=>D.teachers.find(t=>t.id===id)||{};
+const N=x=>Number(x)||0;
+
+function localDB(){
+  const K="tp_",load=c=>{try{return JSON.parse(localStorage.getItem(K+c))||{}}catch(e){return{}}},save=(c,o)=>{try{localStorage.setItem(K+c,JSON.stringify(o))}catch(e){}},subs={};
+  const snap=c=>({docs:Object.entries(load(c)).map(([id,d])=>({id,data:()=>d}))}),fire=c=>(subs[c]||[]).forEach(f=>f(snap(c)));
+  const doc=(c,id)=>({set:async d=>{const o=load(c);o[id]=d;save(c,o);fire(c)},update:async d=>{const o=load(c);o[id]={...(o[id]||{}),...d};save(c,o);fire(c)},delete:async()=>{const o=load(c);delete o[id];save(c,o);fire(c)},get:async()=>{const d=load(c)[id];return{exists:!!d,id,data:()=>d}}});
+  return{collection:c=>({onSnapshot:f=>{(subs[c]=subs[c]||[]).push(f);f(snap(c));return()=>{}},add:async d=>{const id="l"+Date.now()+Math.random().toString(36).slice(2,6);await doc(c,id).set(d);return doc(c,id)},doc:id=>doc(c,id)})}
+}
+const FAILS=new Set();
+function bn(){const n=$("nb");if(FAILS.size){n.style.display="block";n.textContent="⚠️ لا توجد صلاحية قراءة: "+[...FAILS].join("، ")+" — راجع القواعد (Rules) في Firebase ثم Publish"}else if(/^⚠️ لا توجد صلاحية/.test(n.textContent))n.style.display="none"}
+function sub(){unsubs.forEach(u=>u());unsubs=COLS.map(c=>db.collection(c).onSnapshot(s=>{D[c]=s.docs.map(d=>({id:d.id,...d.data()}));FAILS.delete(c);bn();rerender()},e=>{if(c==="notifs"&&S.role!=="admin")return;FAILS.add(c);bn()}))}
+async function init(){
+  try{if(FIREBASE_CONFIG.projectId){firebase.initializeApp(FIREBASE_CONFIG);db=firebase.firestore();try{db.settings({experimentalAutoDetectLongPolling:true})}catch(_){}auth=firebase.auth();FB=true}}catch(e){db=null}
+  if(!db){db=localDB();FB=false;$("nb").style.display="block";$("nb").textContent="⚠️ وضع تجريبي: لم يتم إدخال بيانات Firebase، لذلك البيانات تُحفظ على هذا الجهاز فقط."}
+  else{render();try{try{await auth.setPersistence(firebase.auth.Auth.Persistence.NONE)}catch(_){}if(!auth.currentUser)await Promise.race([auth.signInAnonymously(),new Promise((_,r)=>setTimeout(()=>r({code:"timeout"}),15000))])}catch(e){const n=$("nb");n.style.display="block";n.textContent=e.code==="timeout"?"⚠️ تعذر الاتصال بـ Firebase (انتهت المهلة). افتح رابط المنصة مباشرة في المتصفح وليس داخل معاينة أخرى، وتأكد من الإنترنت.":"⚠️ فعّل تسجيل الدخول المجهول (Anonymous) في Firebase Authentication ("+(e.code||"")+")"}}
+  if(FB){auth.onAuthStateChanged(u=>{if(u)sub()})}else sub();
+  render();
+}
+function rerender(){if(["teacherLogin","adminLogin","parentLogin"].includes(S.role))return;const a=document.activeElement;if(a&&/INPUT|SELECT/.test(a.tagName)){pending=true;return}render()}
+document.addEventListener("focusout",()=>{if(pending)setTimeout(()=>{const a=document.activeElement;if(!(a&&/INPUT|SELECT/.test(a.tagName))){pending=false;render()}},50)});
+const add=(c,o)=>db.collection(c).add({...o,ts:Date.now()}).catch(()=>alert("تعذر الحفظ"));
+const del=(c,id)=>{if(confirm("تأكيد الحذف؟"))db.collection(c).doc(id).delete()};
+
+function go(role,tab){S.role=role;S.tab=tab;S.err="";render()}
+function out(){S.role=null;S.me=null;S.tab=null;render();if(FB&&auth.currentUser&&!auth.currentUser.isAnonymous)auth.signOut().then(()=>auth.signInAnonymously()).then(sub).catch(()=>{})}
+function render(){
+  const A=$("app");
+  if(!db){A.innerHTML=`<h1>🎓 منصة المدرسين</h1><div class="card">يلزم فتح الصفحة وأنت مسجّل الدخول في Claude لتعمل قاعدة البيانات المشتركة.</div>`;return}
+  if(!S.role){A.innerHTML=`<div class="hero"><div class="logo">🏆</div><h1>منصة المجتهد</h1><p>تعلّم.. اجتهد.. تفوّق</p></div><div class="g3">
+  <button class="ic c1" onclick="go('adminLogin')"><span class="e">🛡️</span><b>الإدارة</b><small>دخول الأدمن</small></button>
+  <button class="ic c2" onclick="go('teacherLogin')"><span class="e">👨‍🏫</span><b>المدرس</b><small>تسجيل / دخول</small></button>
+  <button class="ic c3" onclick="go('parentLogin')"><span class="e">👪</span><b>ولي الأمر</b><small>بكود الطالب</small></button>
+  <button class="ic c4" onclick="go('stages')"><span class="e">🎓</span><b>المراحل التعليمية</b><small>تصفّح المدرسين</small></button></div>${adSlot("home")}`;return}
+  const back=`<button onclick="out()">← رجوع</button>`;
+  if(S.role==="adminLogin"){A.innerHTML=`<div class="top"><h1>دخول الإدارة</h1>${back}</div><div class="card">${FB?`<label>البريد الإلكتروني</label><input id="aem" type="email" dir="ltr" placeholder="البريد الإلكتروني للإدارة"><br><br>`:""}<label>كلمة المرور</label><input id="apw" type="password"><p class="bad">${h(S.err)}</p><button class="p" onclick="adminIn()">دخول</button></div>`;return}
+  if(S.role==="parentLogin"){A.innerHTML=`<div class="top"><h1>دخول ولي الأمر</h1>${back}</div><div class="card"><label>كود الطالب</label><input id="code" placeholder="مثال: S12345" autocomplete="off"><p class="bad">${h(S.err)}</p><button class="p" onclick="parentIn()">دخول</button></div>`;return}
+  if(S.role==="teacherLogin"){A.innerHTML=`<div class="top"><h1>المدرس</h1>${back}</div>
+  <div class="card"><h2>دخول</h2><label>رقم الهاتف</label><input id="lph" type="tel" autocomplete="off"><br><br><label>كلمة المرور</label><input id="lpw" type="password" autocomplete="new-password"><p class="bad">${h(S.err)}</p><button class="p" onclick="teacherIn()">دخول</button></div>
+  <div class="card"><h2>تسجيل مدرس جديد</h2><div class="fr">
+  <div><label>الاسم</label><input id="rn"></div><div><label>رقم الهاتف</label><input id="rp" type="tel" autocomplete="off"></div>
+  <div><label>المحافظة</label><select id="rg">${opt(GOV)}</select></div>
+  <div><label>سنوات الخبرة</label><input id="rx" type="number" min="0"></div><div><label>كلمة مرور (6 أحرف على الأقل)</label><input id="rpw" type="password" autocomplete="new-password"></div></div><label>المراحل والتخصصات</label><div id="trows">${rowHtml()}</div><button type="button" onclick="addRow()">➕ إضافة مرحلة أخرى</button><br><br><button class="p" onclick="register()">تسجيل</button></div>`;return}
+  if(S.role==="admin")return admin(A,back);
+  if(S.role==="stages")return stagesView(A,back);
+  if(S.role==="teacher")return teacher(A,back);
+  if(S.role==="parent")return parent(A,back);
+}
+async function adminIn(){
+  if(!FB){if(v("apw")===ADMIN_PIN)go("admin","r");else{S.err="رقم سري خاطئ";render()}return}
+  try{const c=await auth.signInWithEmailAndPassword(v("aem").trim(),v("apw"));
+    if(c.user.email!==ADMIN_EMAIL){await auth.signInAnonymously();S.err="هذا الحساب ليس حساب الإدارة";return render()}
+    sub();go("admin","r")}catch(e){S.err="بيانات الدخول غير صحيحة";render()}}
+function parentIn(){const c=v("code").trim().toUpperCase(),s=D.students.find(x=>x.code===c);if(s){S.me=s;go("parent")}else{S.err="كود غير صحيح";render()}}
+async function teacherIn(){
+  const p=v("lph").replace(/\D/g,""),pw=v("lpw");
+  try{
+    if(FB){await auth.signInWithEmailAndPassword(p+"@teacher.local",pw);sub()}
+    const d=await db.collection("teachers").doc(p).get(),t=d.exists?{id:d.id,...d.data()}:null;
+    if(!t)S.err="رقم غير مسجل";else if(t.status==="pending")S.err="حسابك بانتظار موافقة الإدارة";else if(t.status==="rejected")S.err="تم رفض طلب التسجيل، تواصل مع الإدارة";else if(t.status==="suspended")S.err="تم إيقاف الحساب، تواصل مع الإدارة";else{S.me=t.id;return go("teacher","s")}
+  }catch(e){S.err="رقم الهاتف أو كلمة المرور غير صحيحة"}
+  render()}
+async function register(){
+  const ph=v("rp").replace(/\D/g,""),pw=v("rpw");
+  const TR=[...document.querySelectorAll(".trow")].map(r=>({stage:r.querySelector(".rst").value,subject:r.querySelector(".rsb").value})).filter((x,i,a)=>a.findIndex(y=>y.stage===x.stage&&y.subject===x.subject)===i);
+  const o={name:v("rn").trim(),phone:ph,gov:v("rg"),exp:N(v("rx")),teachings:TR,stages:[...new Set(TR.map(x=>x.stage))],subject:[...new Set(TR.map(x=>x.subject))].join("، "),status:"pending"};
+  if(!o.name||!ph)return alert("أدخل الاسم ورقم الهاتف");
+  if(!o.stages.length)return alert("اختر مرحلة تعليمية واحدة على الأقل");
+  if(FB&&pw.length<6)return alert("كلمة المرور 6 أحرف على الأقل");
+  if(!FB&&D.teachers.some(t=>t.phone===ph))return alert("الرقم مسجل بالفعل");
+  let step="";const T=(p,l)=>{step=l;return Promise.race([p,new Promise((_,r)=>setTimeout(()=>r({code:"timeout"}),15000))])};
+  try{
+    if(FB){
+      try{await T(auth.createUserWithEmailAndPassword(ph+"@teacher.local",pw),"إنشاء الحساب")}
+      catch(e){
+        if(e.code!=="auth/email-already-in-use")throw e;
+        try{await T(auth.signInWithEmailAndPassword(ph+"@teacher.local",pw),"تسجيل الدخول")}catch(_){return alert("الرقم مسجل بالفعل. تأكد من كلمة المرور أو تواصل مع الإدارة")}
+        const ex=await T(db.collection("teachers").doc(ph).get(),"قراءة البيانات");
+        if(ex.exists)return alert("الرقم مسجل بالفعل، ادخل من خانة دخول")
+      }
+    }
+    await T(db.collection("teachers").doc(ph).set({...o,ts:Date.now()}),"حفظ بيانات المدرس");
+    await T(add("notifs",{text:`مدرس جديد سجّل: ${o.name} - ${o.subject} - ${o.gov} - ${ph}`,read:false}),"حفظ الإشعار");
+  }catch(e){return alert(e.code==="timeout"?"تعذر الاتصال عند خطوة: "+step+"\nجرّب شبكة أخرى ثم أعد المحاولة":"تعذر التسجيل: "+(e.code||e.message||""))}
+  alert("تم إرسال طلبك بنجاح، وسيتم تفعيل حسابك بعد موافقة الإدارة.");out();
+}
+function tabs(list){return `<div class="tabs">${list.map(([k,l])=>`<button class="${S.tab===k?"on":""}" onclick="S.tab='${k}';render()">${l}</button>`).join("")}</div>`}
+
+/* ---------- Admin ---------- */
+function admin(A,back){
+  const un=D.notifs.filter(n=>!n.read).length,pend=D.teachers.filter(t=>!OKT(t));
+  const pn=pend.filter(t=>t.status==="pending").length;
+  let body="";
+  if(S.tab==="m")body=`<div class="card"><h2>إعلان جديد</h2><div class="fr">
+   <div><label>العنوان</label><input id="mt"></div>
+   <div><label>النوع</label><select id="mk"><option value="img">صورة + رابط</option><option value="code">كود شبكة إعلانية</option><option value="page">صفحة إعلانية (رابط)</option></select></div>
+   <div><label>مكان الظهور</label><select id="mp">${Object.entries(PL).map(([k,l])=>`<option value="${k}">${l}</option>`).join("")}</select></div>
+   <div><label>رابط الإعلان (للصورة أو للصفحة الإعلانية)</label><input id="ml" dir="ltr" placeholder="https://"></div>
+   <div><label>صورة الإعلان</label><input id="mi" type="file" accept="image/*"></div>
+   <div><label>ارتفاع الكود (بكسل)</label><input id="mh" type="number" value="100"></div>
+   <div><label>من تاريخ</label><input id="mf" type="date"></div><div><label>إلى تاريخ</label><input id="mu" type="date"></div></div>
+   <label>كود الشبكة الإعلانية (للنوع كود فقط)</label><textarea id="mc" dir="ltr" rows="4" style="width:100%"></textarea><br><br>
+   <button class="p" onclick="saveAd()">نشر الإعلان</button> <span id="mm" class="mut"></span></div>
+   <div class="card sc"><table><tr><th>العنوان</th><th>النوع</th><th>المكان</th><th>الفترة</th><th>الحالة</th><th></th></tr>${D.ads.map(a=>`<tr><td>${h(a.title)}</td><td>${a.kind==="code"?"كود":"صورة"}</td><td>${PL[a.place]||""}</td><td>${a.from?dt(a.from):"—"} → ${a.to?dt(a.to):"—"}</td><td><button onclick="db.collection('ads').doc('${a.id}').update({on:${a.on===false}})">${a.on===false?"متوقف":"يعمل"}</button></td><td><button onclick="del('ads','${a.id}')">🗑</button></td></tr>`).join("")||"<tr><td>لا توجد إعلانات</td></tr>"}</table></div>`;
+  if(S.tab==="d"){const due=D.sessions.reduce((a,s)=>a+N(s.cost),0),paid=D.payments.reduce((a,p)=>a+N(p.amount),0);
+   const c=[["المدرسون",D.teachers.filter(OKT).length],["طلبات معلقة",pn],["الطلاب",D.students.length],["الحصص",D.sessions.length],["المستحق",due],["المدفوع",paid],["المتبقي",due-paid]];
+   body=`<div class="g3">${c.map(([k,n])=>`<div class="card" style="text-align:center"><div class="mut">${k}</div><b style="font-size:1.6rem">${n}</b></div>`).join("")}</div>`}
+  if(S.tab==="s")body=`<div class="card"><label>بحث بالاسم أو الكود</label><input id="sq" oninput="drawS()"><div class="sc" id="sl"></div></div>`;
+  if(S.tab==="a")body=`<div class="card"><h2>إعلان جديد للمدرسين</h2><input id="at" placeholder="نص الإعلان"><br><br><button class="p" onclick="postA()">نشر</button></div><div class="card">${[...D.ann].sort((a,b)=>b.ts-a.ts).map(x=>`<p>📢 ${h(x.text)} <span class="mut">(${dt(x.ts)})</span> <button onclick="del('ann','${x.id}')">🗑</button></p>`).join("")||"لا توجد إعلانات"}</div>`;
+  if(S.tab==="r")body=`<div class="card sc"><h2>طلبات تسجيل المدرسين</h2><table><tr><th>الاسم</th><th>الهاتف</th><th>المحافظة</th><th>المادة</th><th>المراحل</th><th>الخبرة</th><th>الحالة</th><th></th></tr>${pend.map(t=>`<tr><td>${h(t.name)}</td><td>${h(t.phone)}</td><td>${h(t.gov)}</td><td>${h(t.subject)}</td><td>${h((t.stages||[]).join("، "))}</td><td>${t.exp||0}</td><td>${t.status==="pending"?"بانتظار":"مرفوض"}</td><td><button class="p" onclick="setSt('${h
