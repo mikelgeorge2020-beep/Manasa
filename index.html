@@ -37,7 +37,7 @@ body{font-family:"Cairo","Segoe UI",Tahoma,Arial,sans-serif}:root{--pri:#1e5bd8;
 .hero h1{color:#fff;margin:6px 0;font-size:1.9rem}.hero p{margin:0;opacity:.92}.logo{font-size:2.6rem}
 .ic{box-shadow:0 4px 14px rgba(0,0,0,.08);transition:transform .15s}.ic:active{transform:scale(.97)}
 .ic .e{width:64px;height:64px;line-height:64px;border-radius:18px;margin:0 auto 6px;font-size:2rem}
-.c1 .e{background:#dbeafe}.c2 .e{background:#dcfce7}.c3 .e{background:#fef3c7}.c4 .e{background:#fce7f3}
+.c1 .e{background:#dbeafe}.c2 .e{background:#dcfce7}.c3 .e{background:#fef3c7}.c4 .e{background:#fce7f3}.c5 .e{background:#e0e7ff}
 .card{box-shadow:0 2px 10px rgba(0,0,0,.05)}button.p{background:linear-gradient(135deg,#1e5bd8,#3b82f6)}
 </style>
 </head>
@@ -68,7 +68,7 @@ const ADMIN_EMAIL="mikelgeorge2020@gmail.com"; // بريد حساب الأدمن
 const ADMIN_PIN="1234"; // للوضع التجريبي المحلي فقط (بدون Firebase)
 let FB=false,auth=null,unsubs=[];
 window.onerror=m=>{if(/^Script error/.test(m))return;const n=document.getElementById("nb");if(n){n.style.display="block";n.textContent="⚠️ خطأ: "+m}};
-const COLS=["teachers","students","sessions","payments","files","notifs","ann","attendance","ads"];
+const COLS=["teachers","students","sessions","payments","files","notifs","ann","attendance","ads","schools"];
 let db=null,S={role:null,tab:null,me:null,sc:null,err:""},D={};COLS.forEach(c=>D[c]=[]);
 let pending=false;
 const $=id=>document.getElementById(id),v=id=>($(id)||{}).value||"";
@@ -87,7 +87,7 @@ function localDB(){
 }
 const FAILS=new Set();
 function bn(){const n=$("nb");if(FAILS.size){n.style.display="block";n.textContent="⚠️ لا توجد صلاحية قراءة: "+[...FAILS].join("، ")+" — راجع القواعد (Rules) في Firebase ثم Publish"}else if(/^⚠️ لا توجد صلاحية/.test(n.textContent))n.style.display="none"}
-function sub(){unsubs.forEach(u=>u());unsubs=COLS.map(c=>db.collection(c).onSnapshot(s=>{D[c]=s.docs.map(d=>({id:d.id,...d.data()}));FAILS.delete(c);bn();rerender()},e=>{if(c==="notifs"&&S.role!=="admin")return;FAILS.add(c);bn()}))}
+function sub(){unsubs.forEach(u=>u());unsubs=COLS.map(c=>db.collection(c).onSnapshot(s=>{D[c]=s.docs.map(d=>({id:d.id,...d.data()}));FAILS.delete(c);bn();rerender()},e=>{if((c==="notifs"||c==="schools")&&S.role!=="admin")return;FAILS.add(c);bn()}))}
 async function init(){
   try{if(FIREBASE_CONFIG.projectId){firebase.initializeApp(FIREBASE_CONFIG);db=firebase.firestore();try{db.settings({experimentalAutoDetectLongPolling:true})}catch(_){}auth=firebase.auth();FB=true}}catch(e){db=null}
   if(!db){db=localDB();FB=false;$("nb").style.display="block";$("nb").textContent="⚠️ وضع تجريبي: لم يتم إدخال بيانات Firebase، لذلك البيانات تُحفظ على هذا الجهاز فقط."}
@@ -95,7 +95,7 @@ async function init(){
   if(FB){auth.onAuthStateChanged(u=>{if(u)sub()})}else sub();
   render();
 }
-function rerender(){if(["teacherLogin","adminLogin","parentLogin"].includes(S.role))return;const a=document.activeElement;if(a&&/INPUT|SELECT/.test(a.tagName)){pending=true;return}render()}
+function rerender(){if(["teacherLogin","adminLogin","parentLogin","schoolReg"].includes(S.role))return;const a=document.activeElement;if(a&&/INPUT|SELECT/.test(a.tagName)){pending=true;return}render()}
 document.addEventListener("focusout",()=>{if(pending)setTimeout(()=>{const a=document.activeElement;if(!(a&&/INPUT|SELECT/.test(a.tagName))){pending=false;render()}},50)});
 const add=(c,o)=>db.collection(c).add({...o,ts:Date.now()}).catch(()=>alert("تعذر الحفظ"));
 const del=(c,id)=>{if(confirm("تأكيد الحذف؟"))db.collection(c).doc(id).delete()};
@@ -105,11 +105,12 @@ function out(){S.role=null;S.me=null;S.tab=null;render();if(FB&&auth.currentUser
 function render(){
   const A=$("app");
   if(!db){A.innerHTML=`<h1>🎓 منصة المدرسين</h1><div class="card">يلزم فتح الصفحة وأنت مسجّل الدخول في Claude لتعمل قاعدة البيانات المشتركة.</div>`;return}
-  if(!S.role){A.innerHTML=`<div class="hero"><div class="logo">🏆</div><h1>منصة المجتهد</h1><p>تعلّم.. اجتهد.. تفوّق</p></div><div class="g3">
+  if(!S.role){A.innerHTML=`<div class="hero"><div class="logo">🏆</div><h1>منصة المجتهد</h1><p>تعلّم.. اجتهد.. تفوّق</p></div>${homeInfo()}<div class="g3">
   <button class="ic c1" onclick="go('adminLogin')"><span class="e">🛡️</span><b>الإدارة</b><small>دخول الأدمن</small></button>
   <button class="ic c2" onclick="go('teacherLogin')"><span class="e">👨‍🏫</span><b>المدرس</b><small>تسجيل / دخول</small></button>
   <button class="ic c3" onclick="go('parentLogin')"><span class="e">👪</span><b>ولي الأمر</b><small>بكود الطالب</small></button>
-  <button class="ic c4" onclick="go('stages')"><span class="e">🎓</span><b>المراحل التعليمية</b><small>تصفّح المدرسين</small></button></div>${adSlot("home")}`;return}
+  <button class="ic c4" onclick="go('stages')"><span class="e">🎓</span><b>بوابة الطلاب</b><small>تصفّح المدرسين والمراحل</small></button>
+  <button class="ic c5" onclick="go('schoolReg')"><span class="e">🏫</span><b>المدارس والسناتر</b><small>طلب انضمام</small></button></div>${adSlot("home")}`;return}
   const back=`<button onclick="out()">← رجوع</button>`;
   if(S.role==="adminLogin"){A.innerHTML=`<div class="top"><h1>دخول الإدارة</h1>${back}</div><div class="card">${FB?`<label>البريد الإلكتروني</label><input id="aem" type="email" dir="ltr" placeholder="البريد الإلكتروني للإدارة"><br><br>`:""}<label>كلمة المرور</label><input id="apw" type="password"><p class="bad">${h(S.err)}</p><button class="p" onclick="adminIn()">دخول</button></div>`;return}
   if(S.role==="parentLogin"){A.innerHTML=`<div class="top"><h1>دخول ولي الأمر</h1>${back}</div><div class="card"><label>كود الطالب</label><input id="code" placeholder="مثال: S12345" autocomplete="off"><p class="bad">${h(S.err)}</p><button class="p" onclick="parentIn()">دخول</button></div>`;return}
@@ -121,6 +122,7 @@ function render(){
   <div><label>سنوات الخبرة</label><input id="rx" type="number" min="0"></div><div><label>كلمة مرور (6 أحرف على الأقل)</label><input id="rpw" type="password" autocomplete="new-password"></div></div><label>المراحل والتخصصات</label><div id="trows">${rowHtml()}</div><button type="button" onclick="addRow()">➕ إضافة مرحلة أخرى</button><br><br><button class="p" onclick="register()">تسجيل</button></div>`;return}
   if(S.role==="admin")return admin(A,back);
   if(S.role==="stages")return stagesView(A,back);
+  if(S.role==="schoolReg")return schoolReg(A,back);
   if(S.role==="teacher")return teacher(A,back);
   if(S.role==="parent")return parent(A,back);
 }
@@ -180,9 +182,8 @@ function admin(A,back){
    <label>كود الشبكة الإعلانية (للنوع كود فقط)</label><textarea id="mc" dir="ltr" rows="4" style="width:100%"></textarea><br><br>
    <button class="p" onclick="saveAd()">نشر الإعلان</button> <span id="mm" class="mut"></span></div>
    <div class="card sc"><table><tr><th>العنوان</th><th>النوع</th><th>المكان</th><th>الفترة</th><th>الحالة</th><th></th></tr>${D.ads.map(a=>`<tr><td>${h(a.title)}</td><td>${a.kind==="code"?"كود":"صورة"}</td><td>${PL[a.place]||""}</td><td>${a.from?dt(a.from):"—"} → ${a.to?dt(a.to):"—"}</td><td><button onclick="db.collection('ads').doc('${a.id}').update({on:${a.on===false}})">${a.on===false?"متوقف":"يعمل"}</button></td><td><button onclick="del('ads','${a.id}')">🗑</button></td></tr>`).join("")||"<tr><td>لا توجد إعلانات</td></tr>"}</table></div>`;
+  if(S.tab==="c")body=`<div class="card sc"><h2>طلبات انضمام المدارس والسناتر</h2><table><tr><th>الاسم</th><th>المحافظة</th><th>المرحلة</th><th>الهاتف</th><th>الحالة</th><th></th></tr>${[...D.schools].sort((a,b)=>b.ts-a.ts).map(x=>`<tr><td>${h(x.name)}</td><td>${h(x.gov)}</td><td>${h(x.stage)}</td><td><a href="${wa(x.phone)}" target="_blank" rel="noopener">${h(x.phone)}</a></td><td>${x.status==="approved"?"مقبولة":x.status==="rejected"?"مرفوضة":"بانتظار"}</td><td><button class="p" onclick="setSch('${x.id}','approved')">قبول</button> <button onclick="setSch('${x.id}','rejected')">رفض</button> <button onclick="del('schools','${x.id}')">🗑</button></td></tr>`).join("")||"<tr><td>لا توجد طلبات</td></tr>"}</table></div>`;
   if(S.tab==="d"){const due=D.sessions.reduce((a,s)=>a+N(s.cost),0),paid=D.payments.reduce((a,p)=>a+N(p.amount),0);
    const c=[["المدرسون",D.teachers.filter(OKT).length],["طلبات معلقة",pn],["الطلاب",D.students.length],["الحصص",D.sessions.length],["المستحق",due],["المدفوع",paid],["المتبقي",due-paid]];
    body=`<div class="g3">${c.map(([k,n])=>`<div class="card" style="text-align:center"><div class="mut">${k}</div><b style="font-size:1.6rem">${n}</b></div>`).join("")}</div>`}
-  if(S.tab==="s")body=`<div class="card"><label>بحث بالاسم أو الكود</label><input id="sq" oninput="drawS()"><div class="sc" id="sl"></div></div>`;
-  if(S.tab==="a")body=`<div class="card"><h2>إعلان جديد للمدرسين</h2><input id="at" placeholder="نص الإعلان"><br><br><button class="p" onclick="postA()">نشر</button></div><div class="card">${[...D.ann].sort((a,b)=>b.ts-a.ts).map(x=>`<p>📢 ${h(x.text)} <span class="mut">(${dt(x.ts)})</span> <button onclick="del('ann','${x.id}')">🗑</button></p>`).join("")||"لا توجد إعلانات"}</div>`;
-  if(S.tab==="r")body=`<div class="card sc"><h2>طلبات تسجيل المدرسين</h2><table><tr><th>الاسم</th><th>الهاتف</th><th>المحافظة</th><th>المادة</th><th>المراحل</th><th>الخبرة</th><th>الحالة</th><th></th></tr>${pend.map(t=>`<tr><td>${h(t.name)}</td><td>${h(t.phone)}</td><td>${h(t.gov)}</td><td>${h(t.subject)}</td><td>${h((t.stages||[]).join("، "))}</td><td>${t.exp||0}</td><td>${t.status==="pending"?"بانتظار":"مرفوض"}</td><td><button class="p" onclick="setSt('${h
+  
